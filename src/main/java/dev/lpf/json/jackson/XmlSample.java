@@ -1,8 +1,8 @@
-package dev.lpf.json;
+package dev.lpf.json.jackson;
 
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-import dev.lpf.json.entity.Person;
+import dev.lpf.json.jackson.entity.Person;
 
 import java.io.IOException;
 import java.time.LocalDate;

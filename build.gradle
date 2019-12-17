@@ -30,11 +30,13 @@ dependencies {
     compile group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jdk8', version: jacksonVersion
     compile group: 'javax.xml.bind', name: 'jaxb-api', version: '2.3.0'
 
+    // fastjson
+    compile group: 'com.alibaba', name: 'fastjson', version: '1.2.61'
+
     //lombok
     // https://mvnrepository.com/artifact/org.projectlombok/lombok
     compileOnly 'org.projectlombok:lombok:1.18.4'
     annotationProcessor 'org.projectlombok:lombok:1.18.4'
     testCompileOnly 'org.projectlombok:lombok:1.18.4'
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.4'
-
 }

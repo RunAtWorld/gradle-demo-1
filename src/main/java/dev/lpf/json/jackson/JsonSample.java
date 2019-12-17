@@ -1,4 +1,4 @@
-package dev.lpf.json;
+package dev.lpf.json.jackson;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -8,9 +8,9 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
-import dev.lpf.json.entity.Friend;
-import dev.lpf.json.entity.FriendDetail;
-import dev.lpf.json.entity.Person;
+import dev.lpf.json.jackson.entity.Friend;
+import dev.lpf.json.jackson.entity.FriendDetail;
+import dev.lpf.json.jackson.entity.Person;
 
 
 import java.io.File;
@@ -27,11 +27,11 @@ public class JsonSample {
         person.setName("s");
         quickStart();
         System.out.println("---------集合的映射---------");
-        //collectionMapping();
+        collectionMapping();
         System.out.println("---------注解---------");
-        //annotationMapping();
+        annotationMapping();
         System.out.println("---------java8日期支持---------");
-        //java8DateTime();
+        java8DateTime();
 
     }
 

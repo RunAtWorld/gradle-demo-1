@@ -1,4 +1,4 @@
-package dev.lpf.json.entity;
+package dev.lpf.json.jackson.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -1,4 +1,4 @@
-package dev.lpf.json.entity;
+package dev.lpf.json.jackson.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
