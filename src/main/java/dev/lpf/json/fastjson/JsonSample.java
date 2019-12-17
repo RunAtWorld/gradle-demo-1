@@ -22,7 +22,7 @@ public class JsonSample {
         serialize();
         System.out.println("-------反序列化------------");
         deserialize();
-        System.out.println("-------测试------------");
+        System.out.println("-------对用户/用户组序列化------------");
         usertest();
     }
 
