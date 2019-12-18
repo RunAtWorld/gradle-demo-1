@@ -9,7 +9,7 @@ import java.time.LocalDate;
 
 public class XmlSample {
     public static void main(String[] args) throws IOException {
-        Person p1 = new Person("yitian", "易天", 25, "10000", LocalDate.of(1994, 1, 1));
+        Person p1 = new Person("yitian", "易天", 25, "10000", LocalDate.of(1994, 1, 1),null);
         XmlMapper mapper = new XmlMapper();
         mapper.findAndRegisterModules();
         mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);

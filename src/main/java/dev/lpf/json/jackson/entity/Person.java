@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -29,5 +30,6 @@ public class Person {
     //@JacksonXmlProperty(isAttribute = true)
     @JsonFormat(pattern = "yyyy/MM/DD")
     private LocalDate birthday;
-
+    @JsonProperty("Hobby")
+    private List<String> hobbies;
 }

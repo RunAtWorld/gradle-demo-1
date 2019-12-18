@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @JsonRootName("FriendDetail")
 @JsonIgnoreProperties({"uselessProp1", "uselessProp3"})
 public class FriendDetail {
-    @JsonProperty("NickName")
+    @JsonProperty("Name")
     private String name;
     @JsonProperty("Age")
     private int age;
@@ -22,5 +22,4 @@ public class FriendDetail {
     @JsonIgnore
     private int uselessProp2;
     private String uselessProp3;
-
 }

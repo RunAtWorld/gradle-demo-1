@@ -1,5 +1,6 @@
 package dev.lpf.json.jackson;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -11,20 +12,20 @@ import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
 import dev.lpf.json.jackson.entity.Friend;
 import dev.lpf.json.jackson.entity.FriendDetail;
 import dev.lpf.json.jackson.entity.Person;
+import dev.lpf.json.jackson.entity.Student;
 
 
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class JsonSample {
     public static void main(String[] args) throws IOException {
         System.out.println("---------简单的映射---------");
-        Person person = new Person();
-        person.setAge(12);
-        person.setName("s");
         quickStart();
         System.out.println("---------集合的映射---------");
         collectionMapping();
@@ -32,12 +33,19 @@ public class JsonSample {
         annotationMapping();
         System.out.println("---------java8日期支持---------");
         java8DateTime();
+        System.out.println("---------复杂对象支持---------");
+        complexJavaObject();
 
     }
 
     static void quickStart() throws IOException {
         ObjectMapper mapper = new ObjectMapper();
-        Friend friend = new Friend("yitian", 25);
+        Friend friend = new Friend(){
+            {
+                this.setNickname("yitian");
+                this.setAge(25);
+            }
+        };
 
         System.out.println(friend);
         //mapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
@@ -93,7 +101,13 @@ public class JsonSample {
     }
 
     static void java8DateTime() throws IOException {
-        Person p1 = new Person("yitian", "易天", 25, "10000", LocalDate.of(1994, 1, 1));
+        Person p1 = new Person("yitian", "易天", 25, "10000", LocalDate.of(1994, 1, 1),new ArrayList<String>(){
+            {
+                this.add("painting");
+                this.add("piano");
+                this.add("hiving");
+            }
+        });
         ObjectMapper mapper = new ObjectMapper()
                 .registerModule(new JavaTimeModule())
                 .registerModule(new ParameterNamesModule())
@@ -104,5 +118,19 @@ public class JsonSample {
 
         Person p2 = mapper.readValue(text, Person.class);
         System.out.println(p2);
+    }
+
+    static void complexJavaObject() throws IOException {
+        ObjectMapper mapper = new ObjectMapper();
+        List<Friend> friendList = new ArrayList<>();
+        friendList.add(new Friend("zhangming",12));
+        friendList.add(new Friend("Hangzhong",14));
+        friendList.add(new Friend("SanYixian",17));
+        Student stu1 = new Student("23222",21,friendList.toArray(new Friend[0]));
+        System.out.println("stu1: " + stu1);
+        String text = mapper.writeValueAsString(stu1);
+        System.out.println(text);
+        Student stu2 = mapper.readValue(text,Student.class);
+        System.out.println("stu2: " + stu2);
     }
 }

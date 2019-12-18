@@ -1,5 +1,6 @@
 package dev.lpf.json.jackson.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,7 +9,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Friend {
-    private String nickname;
-    private int age;
-
+    String nickname;
+    int age;
 }
