@@ -1,7 +1,7 @@
-### FastJSON 用法
+# FastJSON 用法
 
-##### FastJSON 一般用法
-###### Demo1 - 简单使用
+## FastJSON 一般用法
+### Demo1 - 简单使用
 
 Student.java
 ```
@@ -131,7 +131,7 @@ bob
 {"name":"student4","age":4}
 ```
 
-###### Demo2 - 复杂对象
+### Demo2 - 复杂对象
 User.java
 
 ```
@@ -224,8 +224,8 @@ jsonString2:[{"age":18,"id":131,"name":"guest"},{"age":28,"id":134,"name":"root"
 userList:[User(id=131, name=guest, age=18, createTime=null), User(id=134, name=root, age=28, createTime=null)]
 ```
 
-##### JSONField与JSONType注解的使用
-###### JSONField
+## JSONField与JSONType注解的使用
+#### JSONField
 
 fastjson提供了JSONField对序列化与反序列化进行定制，比如可以指定字段的名称，序列化的顺序。JSONField用于属性，方法方法参数上。
 
@@ -338,7 +338,7 @@ public class SexDeserialize implements ObjectDeserializer {
 }
 ```
 
-###### JSONType
+#### JSONType
 
 fastjosn提供了JSONType用于类级别的定制化.
 
@@ -397,7 +397,7 @@ public @interface JSONType {
 }
 ```
 
-#### SerializeFilter
+### SerializeFilter
 
 fastjson通过SerializeFilter编程扩展的方式定制序列化fastjson支持以下SerializeFilter用于不同常景的定制序列化：
 
@@ -531,7 +531,7 @@ public interface LabelFilter extends SerializeFilter {
 }
 ```
 
-#### 泛型反序列化
+## 泛型反序列化
 
 fastjson通过TypeReference来实现泛型的反序列化，以下是一个简单的例子程序。
 
@@ -671,10 +671,10 @@ public class GenericTest {
 ```
 
 
-#### fastjson各种概念
+## fastjson各种概念
 
 JSON：本身是Abstract，提供了一系统的工具方法方便用户使用的API。
-##### 序列化相关的概念
+#### 序列化相关的概念
 
 - SerializeConfig：内部是个map容器主要功能是配置并记录每种Java类型对应的序列化类。
 - SerializeWriter 继承自Java的Writer，其实就是个转为FastJSON而生的StringBuilder，完成高性能的字符串拼接。
@@ -715,7 +715,7 @@ JSON：本身是Abstract，提供了一系统的工具方法方便用户使用�
     }
 ```
 
-##### 反序列化相关的概念
+#### 反序列化相关的概念
 
 - ParserConfig：内部通过一个map保存各种ObjectDeserializer。
 - JSONLexer : 与SerializeWriter相对应，用于解析json字符串。
@@ -766,7 +766,7 @@ JSON：本身是Abstract，提供了一系统的工具方法方便用户使用�
     }
 ```
 
-#### 与Spring MVC整合
+## 与Spring MVC整合
 
  fastjson提供了FastJsonHttpMessageConverter用于将Spring mvc里的body数据(必须是json格式)转成Controller里的请求参数或者将输出的对象转成json格式的数据。spring mvc里的核心配置如下：
 
@@ -818,6 +818,6 @@ public class FastJsonHttpMessageConverter extends AbstractHttpMessageConverter<O
 }
 ```
 
-### 参考
+# 参考
 1. [fastjson Samples DataBind](https://github.com/alibaba/fastjson/wiki/Samples-DataBind)
-2. [](https://www.jianshu.com/p/eaeaa5dce258)
+2. [fastjson详解](https://www.jianshu.com/p/eaeaa5dce258)
