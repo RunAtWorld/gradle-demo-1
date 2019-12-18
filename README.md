@@ -76,9 +76,8 @@ DisableCheckSpecialChar---一个对象的字符串属性中如果有特殊字符
 BeanToArray---将对象转为array输出	
 ```
 
-##### FastJSON 一般用法
+##### [FastJSON 一般用法](fastjson.md)
 
-###### JSONField与JSONType注解的使用
 
 ###### 参考
 1. [fastjson 官方 wiki](https://github.com/alibaba/fastjson/wiki)
