@@ -159,7 +159,7 @@ public class JsonSample {
 
 结果输出
 
-```json
+```
 ---------简单的映射---------
 Friend(nickname=yitian, age=25)
 {"nickname":"yitian","age":25}
@@ -214,7 +214,7 @@ public class Student {
 ```
 
 结果输出
-```json
+```
 stu1: Student(id=23222, age=21, friends=[Friend(nickname=zhangming, age=12), Friend(nickname=Hangzhong, age=14), Friend(nickname=SanYixian, age=17)])
 {"age":21,"stuId":"23222","friends":[{"nickname":"zhangming","age":12},{"nickname":"Hangzhong","age":14},{"nickname":"SanYixian","age":17}]}
 stu2: Student(id=23222, age=21, friends=[Friend(nickname=zhangming, age=12), Friend(nickname=Hangzhong, age=14), Friend(nickname=SanYixian, age=17)])
@@ -376,14 +376,14 @@ public class FriendDetail {
 
 运行结果如下。生成JSON的时候忽略了制定的值，而且在转换为Java类的时候对应的属性为空。
 
-```json
+```
 {"NickName":"yitian","Age":25}
 FriendDetail(name=yitian, age=25, uselessProp1=null, uselessProp2=0, uselessProp3=null)
 ```
 
 然后取消注释代码中的那行，也就是启用WRAP_ROOT_VALUE功能，再运行一下程序，运行结果如下。可以看到生成的JSON结果发生了变化，而且由于JSON结果变化，所以Java类转换失败（所有字段值全为空）。WRAP_ROOT_VALUE这个功能在有些时候比较有用，因为有些JSON文件需要这种结构。
 
-```json
+```
 {"FriendDetail":{"NickName":"yitian","Age":25}}
 FriendDetail(name=null, age=0, uselessProp1=null, uselessProp2=0, uselessProp3=null)
 ```
@@ -442,14 +442,14 @@ public class Person {
 
 运行结果如下。可以看到，生成的JSON日期变成了[1994,1,1]这样的时间戳形式，一般情况下不符合的要求。
 
-```json
+```
 {"birthday":[1994,1,1],"Name":"yitian","NickName":"易天","Age":25,"IdentityCode":"10000"}
 Person(name=yitian, nickname=易天, age=25, identityCode=10000, birthday=1994-01-01)
 ```
 
 
 取消注释那行代码，程序运行结果如下。这样一来就变成了一般使用的形式了。如果有格式需要的话，可以使用@JsonFormat(pattern = "yyyy-MM-DD")注解格式化日期显示。
-```json
+```
 {"birthday":"1994-01-01","Name":"yitian","NickName":"易天","Age":25,"IdentityCode":"10000"}
 Person(name=yitian, nickname=易天, age=25, identityCode=10000, birthday=1994-01-01)
 ```
