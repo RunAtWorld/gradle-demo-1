@@ -1,4 +1,225 @@
 # Jackson 的使用
+## 快速使用
+### Demo1 - 一般使用
+
+Friend.java
+```java
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class FriendDetail {
+    String nickname;
+    int age;
+}
+```
+
+FriendDetail.java
+```java
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@JsonRootName("FriendDetail")
+@JsonIgnoreProperties({"uselessProp1", "uselessProp3"})
+public class FriendDetail {
+    @JsonProperty("Name")
+    private String name;
+    @JsonProperty("Age")
+    private int age;
+    private String uselessProp1;
+    @JsonIgnore
+    private int uselessProp2;
+    private String uselessProp3;
+}
+```
+
+Person.java
+```java
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@JsonRootName("Person")
+public class Person {
+    @JsonProperty("Name")
+    private String name;
+    @JsonProperty("NickName")
+    //@JacksonXmlText
+    private String nickname;
+    @JsonProperty("Age")
+    private int age;
+    @JsonProperty("IdentityCode")
+    @JacksonXmlCData
+    private String identityCode;
+    @JsonProperty("Birthday")
+    //@JacksonXmlProperty(isAttribute = true)
+    @JsonFormat(pattern = "yyyy/MM/DD")
+    private LocalDate birthday;
+    @JsonProperty("Hobby")
+    private List<String> hobbies;
+}
+```
+
+使用例子 
+
+```java
+public class JsonSample {
+    public static void main(String[] args) throws IOException {
+        System.out.println("---------简单的映射---------");
+        quickStart();
+        System.out.println("---------集合的映射---------");
+        collectionMapping();
+        System.out.println("---------注解---------");
+        annotationMapping();
+        System.out.println("---------java8日期支持---------");
+        java8DateTime();
+    }
+
+    static void quickStart() throws IOException {
+        ObjectMapper mapper = new ObjectMapper();
+        Friend friend = new Friend(){
+            {
+                this.setNickname("yitian");
+                this.setAge(25);
+            }
+        };
+
+        System.out.println(friend);
+        //mapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
+        // 写为字符串
+        String text = mapper.writeValueAsString(friend);
+        // 写为文件
+        mapper.writeValue(new File("friend.json"), friend);
+        // 写为字节流
+        byte[] bytes = mapper.writeValueAsBytes(friend);
+        System.out.println(text);
+        // 从字符串中读取
+        Friend newFriend = mapper.readValue(text, Friend.class);
+        // 从字节流中读取
+        newFriend = mapper.readValue(bytes, Friend.class);
+        // 从文件中读取
+        newFriend = mapper.readValue(new File("friend.json"), Friend.class);
+        System.out.println(newFriend);
+    }
+
+    static void collectionMapping() throws IOException {
+        ObjectMapper mapper = new ObjectMapper();
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("age", 25);
+        map.put("name", "yitian");
+        map.put("interests", new String[]{"pc games", "music"});
+
+        String text = mapper.writeValueAsString(map);
+        System.out.println(text);
+
+        Map<String, Object> map2 = mapper.readValue(text, new TypeReference<Map<String, Object>>() {
+        });
+        System.out.println(map2);
+
+        JsonNode root = mapper.readTree(text);
+        String name = root.get("name").asText();
+        int age = root.get("age").asInt();
+
+        System.out.println("name:" + name + " age:" + age);
+    }
+
+    static void annotationMapping() throws IOException {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.enable(SerializationFeature.WRAP_ROOT_VALUE);
+        mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+        FriendDetail fd = new FriendDetail("yitian", 25, "", 0, "");
+        String text = mapper.writeValueAsString(fd);
+        System.out.println(text);
+
+        FriendDetail fd2 = mapper.readValue(text, FriendDetail.class);
+        System.out.println(fd2);
+
+    }
+
+    static void java8DateTime() throws IOException {
+        Person p1 = new Person("yitian", "易天", 25, "10000", LocalDate.of(1994, 1, 1),new ArrayList<String>(){
+            {
+                this.add("painting");
+                this.add("piano");
+                this.add("hiving");
+            }
+        });
+        ObjectMapper mapper = new ObjectMapper()
+                .registerModule(new JavaTimeModule())
+                .registerModule(new ParameterNamesModule())
+                .registerModule(new Jdk8Module());
+        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        String text = mapper.writeValueAsString(p1);
+        System.out.println(text);
+
+        Person p2 = mapper.readValue(text, Person.class);
+        System.out.println(p2);
+    }
+}
+```
+
+结果输出
+
+```json
+---------简单的映射---------
+Friend(nickname=yitian, age=25)
+{"nickname":"yitian","age":25}
+Friend(nickname=yitian, age=25)
+---------集合的映射---------
+{"name":"yitian","interests":["pc games","music"],"age":25}
+{name=yitian, interests=[pc games, music], age=25}
+name:yitian age:25
+---------注解---------
+{"FriendDetail":{"Name":"yitian","Age":25}}
+FriendDetail(name=null, age=0, uselessProp1=null, uselessProp2=0, uselessProp3=null)
+---------java8日期支持---------
+{"Name":"yitian","NickName":"易天","Age":25,"IdentityCode":"10000","Birthday":"1994/01/01","Hobby":["painting","piano","hiving"]}
+Person(name=yitian, nickname=易天, age=25, identityCode=10000, birthday=1994-01-01, hobbies=[painting, piano, hiving])
+```
+### Demo2 - 复杂对象支持
+
+Student.java
+```java
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class Student {
+    @JsonProperty("stuId")
+    private String id;
+
+    @JsonProperty(value = "age",defaultValue = "18")
+    @JsonIgnore
+    private int age;
+
+    @JsonProperty("friends")
+    private Friend[] friends;
+}
+```
+
+复杂对象支持例子
+
+```java
+    static void complexJavaObject() throws IOException {
+        ObjectMapper mapper = new ObjectMapper();
+        List<Friend> friendList = new ArrayList<>();
+        friendList.add(new Friend("zhangming",12));
+        friendList.add(new Friend("Hangzhong",14));
+        friendList.add(new Friend("SanYixian",17));
+        Student stu1 = new Student("23222",21,friendList.toArray(new Friend[0]));
+        System.out.println("stu1: " + stu1);
+        String text = mapper.writeValueAsString(stu1);
+        System.out.println(text);
+        Student stu2 = mapper.readValue(text,Student.class);
+        System.out.println("stu2: " + stu2);
+    }
+```
+
+结果输出
+```json
+stu1: Student(id=23222, age=21, friends=[Friend(nickname=zhangming, age=12), Friend(nickname=Hangzhong, age=14), Friend(nickname=SanYixian, age=17)])
+{"age":21,"stuId":"23222","friends":[{"nickname":"zhangming","age":12},{"nickname":"Hangzhong","age":14},{"nickname":"SanYixian","age":17}]}
+stu2: Student(id=23222, age=21, friends=[Friend(nickname=zhangming, age=12), Friend(nickname=Hangzhong, age=14), Friend(nickname=SanYixian, age=17)])
+```
+
 ## Jackson注解
 Jackson类库包含了很多注解，可以让快速建立Java类与JSON之间的关系。详细文档可以参考Jackson-Annotations。下面介绍一下常用的。
 
