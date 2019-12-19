@@ -155,34 +155,37 @@ public class FriendDetail {
 
 运行结果如下。生成JSON的时候忽略了制定的值，而且在转换为Java类的时候对应的属性为空。
 
+```json
 {"NickName":"yitian","Age":25}
 FriendDetail(name=yitian, age=25, uselessProp1=null, uselessProp2=0, uselessProp3=null)
-1
-2
+```
+
 然后取消注释代码中的那行，也就是启用WRAP_ROOT_VALUE功能，再运行一下程序，运行结果如下。可以看到生成的JSON结果发生了变化，而且由于JSON结果变化，所以Java类转换失败（所有字段值全为空）。WRAP_ROOT_VALUE这个功能在有些时候比较有用，因为有些JSON文件需要这种结构。
 
+```json
 {"FriendDetail":{"NickName":"yitian","Age":25}}
 FriendDetail(name=null, age=0, uselessProp1=null, uselessProp2=0, uselessProp3=null)
-1
-2
-Java8日期时间类支持
+```
+
+
+### Java8日期时间类支持
+
 Java8增加了一套全新的日期时间类，Jackson对此也有支持。这些支持是以Jackson模块形式提供的，所以首先就是注册这些模块。
+```java
+    ObjectMapper mapper = new ObjectMapper()
+            .registerModule(new JavaTimeModule())
+            .registerModule(new ParameterNamesModule())
+            .registerModule(new Jdk8Module());
+```
 
-        ObjectMapper mapper = new ObjectMapper()
-                .registerModule(new JavaTimeModule())
-                .registerModule(new ParameterNamesModule())
-                .registerModule(new Jdk8Module());
-1
-2
-3
-4
+
 导入类库之后，Jackson也可以自动搜索所有模块，不需要手动注册。
-
-        mapper.findAndRegisterModules();
-1
+```java
+   mapper.findAndRegisterModules();
+```
+        
 新建一个带有LocalDate字段的Java类。
-
-@Data
+```java
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonRootName("Person")
@@ -198,28 +201,11 @@ public class Person {
     @JsonProperty
     @JsonFormat(pattern = "yyyy-MM-DD")
     private LocalDate birthday;
-
 }
-1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
-14
-15
-16
-17
-18
-然后来看看代码。
+```
+使用如下
 
+```java
     static void java8DateTime() throws IOException {
         Person p1 = new Person("yitian", "易天", 25, "10000", LocalDate.of(1994, 1, 1));
         ObjectMapper mapper = new ObjectMapper()
@@ -231,50 +217,42 @@ public class Person {
         Person p2 = mapper.readValue(text, Person.class);
         System.out.println(p2);
     }
-1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
+```
+
 运行结果如下。可以看到，生成的JSON日期变成了[1994,1,1]这样的时间戳形式，一般情况下不符合的要求。
 
+```json
 {"birthday":[1994,1,1],"Name":"yitian","NickName":"易天","Age":25,"IdentityCode":"10000"}
 Person(name=yitian, nickname=易天, age=25, identityCode=10000, birthday=1994-01-01)
-1
-2
-取消注释那行代码，程序运行结果如下。这样一来就变成了一般使用的形式了。如果有格式需要的话，可以使用@JsonFormat(pattern = "yyyy-MM-DD")注解格式化日期显示。
+```
 
+
+取消注释那行代码，程序运行结果如下。这样一来就变成了一般使用的形式了。如果有格式需要的话，可以使用@JsonFormat(pattern = "yyyy-MM-DD")注解格式化日期显示。
+```json
 {"birthday":"1994-01-01","Name":"yitian","NickName":"易天","Age":25,"IdentityCode":"10000"}
 Person(name=yitian, nickname=易天, age=25, identityCode=10000, birthday=1994-01-01)
-1
-2
-处理XML
+```
+
+### 处理XML
 Jackson是一个处理JSON的类库，不过它也通过jackson-dataformat-xml包提供了处理XML的功能。Jackson建议在处理XML的时候使用woodstox-core包，它是一个XML的实现，比JDK自带XML实现更加高效，也更加安全。
 
 这里有个注意事项，如果你正在使用Java 9以上的JDK，可能会出现java.lang.NoClassDefFoundError: javax/xml/bind/JAXBException异常，这是因为Java 9实现了JDK的模块化，将原本和JDK打包在一起的JAXB实现分隔出来。所以这时候需要手动添加JAXB的实现。在Gradle中添加下面的代码即可。
 
+```java
 compile group: 'javax.xml.bind', name: 'jaxb-api', version: '2.3.0'
-1
+```
+
 注解
-Jackson XML除了使用Jackson JSON和JDK JAXB的一些注解之外，自己也定义了一些注解。下面简单介绍一下几个常用注解。
+Jackson XML除了使用Jackson JSON和JDK JAXB的一些注解之外，自己也定义了一些注解。
 
-@JacksonXmlProperty注解有三个属性，namespace和localname属性用于指定XML命名空间的名称，isAttribute指定该属性作为XML的属性（）还是作为子标签（）.
-
-@JacksonXmlRootElement注解有两个属性，namespace和localname属性用于指定XML根元素命名空间的名称。
-
-@JacksonXmlText注解将属性直接作为未被标签包裹的普通文本表现。
-
-@JacksonXmlCData将属性包裹在CDATA标签中。
+- @JacksonXmlProperty注解有三个属性，namespace和localname属性用于指定XML命名空间的名称，isAttribute指定该属性作为XML的属性（）还是作为子标签（）.
+- @JacksonXmlRootElement注解有两个属性，namespace和localname属性用于指定XML根元素命名空间的名称。
+- @JacksonXmlText注解将属性直接作为未被标签包裹的普通文本表现。
+- @JacksonXmlCData将属性包裹在CDATA标签中。
 
 XML映射
 新建如下一个Java类。
-
+```java
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -296,6 +274,7 @@ public class Person {
     private LocalDate birthday;
 
 }
+```
 
 下面是代码示例，基本上和JSON的API非常相似，XmlMapper实际上就是ObjectMapper的子类。
 ```java
@@ -339,16 +318,17 @@ Person(name=yitian, nickname=null, age=25, identityCode=10000, birthday=1994-01-
 
 
 ### Spring Boot集成
-自动配置
+#### 自动配置
 Spring Boot对Jackson的支持非常完善，只要引入相应类库，Spring Boot就可以自动配置开箱即用的Bean。Spring自动配置的ObjectMapper（或者XmlMapper）作了如下配置，基本上可以适应大部分情况。
 
-禁用了MapperFeature.DEFAULT_VIEW_INCLUSION
-禁用了DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES
-禁用了SerializationFeature.WRITE_DATES_AS_TIMESTAMPS
+禁用了MapperFeature.DEFAULT_VIEW_INCLUSION   
+禁用了DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES    
+禁用了SerializationFeature.WRITE_DATES_AS_TIMESTAMPS   
+
 如果需要修改自动配置的ObjectMapper属性也非常简单，Spring Boot提供了一组环境变量，直接在application.properties文件中修改即可。
 
-|Jackson枚举|Spring环境变量|
-|—–|—–|
+|Jackson枚举 | Spring环境变量  |
+| ---  | --- |
 com.fasterxml.jackson.databind.DeserializationFeature|spring.jackson.deserialization.=true|false
 com.fasterxml.jackson.core.JsonGenerator.Feature|spring.jackson.generator.=true|false
 com.fasterxml.jackson.databind.MapperFeature|spring.jackson.mapper.=true|false
@@ -358,6 +338,7 @@ com.fasterxml.jackson.annotation.JsonInclude.Include|spring.jackson.default-prop
 
 由于Spring会同时配置相应的HttpMessageConverters，所以其实要做的很简单，用Jackson注解标注好要映射的Java类，然后直接让控制器返回对象即可！下面是一个Java类。
 
+```java
 @JsonRootName("person")
 public class Person {
     @JsonProperty
@@ -373,9 +354,11 @@ public class Person {
         this.birthday = birthday;
     }
 }
+```
 
 然后是控制器代码。在整个过程中只需要引入Jackson类库，然后编写业务代码就好了。关于如何配置Jackson类库，完全不需要管，这就是Spring Boot的方便之处。
 
+```java
 @Controller
 public class MainController {
     private Person person = new Person("yitian", 10000, LocalDate.of(1994, 1, 1));
@@ -392,13 +375,15 @@ public class MainController {
         return person;
     }
 }
+```
 
 进入localhost:8080/xml就可以看到对应结果了。
 
 
-手动配置
+#### 手动配置
 Spring Boot自动配置非常方便，但不是万能的。在必要的时候，需要手动配置Bean来替代自动配置的Bean。
 
+```java
 @Configuration
 public class JacksonConfig {
     @Bean
@@ -422,9 +407,12 @@ public class JacksonConfig {
         return mapper;
     }
 }
+```
+
 
 然后在需要的地方进行依赖注入。需要注意为了区分ObjectMapper和XmlMapper，需要使用@Qualifier注解进行标记。
 
+```java
 @Controller
 public class MainController {
     private ObjectMapper jsonMapper;
@@ -435,3 +423,5 @@ public class MainController {
         this.jsonMapper = jsonMapper;
         this.xmlMapper = xmlMapper;
     }
+```
+
