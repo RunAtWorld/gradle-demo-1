@@ -11,6 +11,11 @@
 ![](jackson.png)
 
 1. [jackson入门](https://blog.csdn.net/u011054333/article/details/80504154)
+1. [jackson @ github](https://github.com/FasterXML/jackson-databind)
+1. [Annotations("jackson-annotations") ](https://github.com/FasterXML/jackson-annotations)
+1. [Databind ("jackson-databind") ](https://github.com/FasterXML/jackson-databind)
+1. [Streaming ("jackson-core")](http://www.cowtowncoder.com/blog/archives/2009/01/entry_132.html)
+
 
 ##### Jackson 一般用法
 
