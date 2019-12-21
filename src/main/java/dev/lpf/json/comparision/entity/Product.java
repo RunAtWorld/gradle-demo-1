@@ -1,4 +1,4 @@
-package dev.json.fastjson.entity;
+package dev.lpf.json.comparision.entity;
 
 
 import com.alibaba.fastjson.annotation.JSONField;

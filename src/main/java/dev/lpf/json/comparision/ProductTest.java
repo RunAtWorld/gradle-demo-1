@@ -1,16 +1,17 @@
-package dev.lpf.json.fastjson;
+package dev.lpf.json.comparision;
 
 
 import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import dev.lpf.json.comparision.entity.Product;
 
 import java.io.IOException;
 import java.util.logging.Logger;
 
 /**
- * 对fastjson中的JSON转换做一个测试
+ * 对fastjson,jackson 注解加在方法上做个测试
  */
 public class ProductTest {
 
@@ -20,7 +21,7 @@ public class ProductTest {
     }
 
     public static void test() {
-        dev.json.fastjson.entity.Product product = new dev.json.fastjson.entity.Product();
+        Product product = new Product();
         product.setProductName("产品");
         product.setDesc("这是一个产品");
         product.setPrice("22.3");
@@ -32,7 +33,7 @@ public class ProductTest {
         // jsonStr = jsonStr.toUpperCase();
         jsonStr = jsonStr.replace("price","price2");
         System.out.println("替换属性: " + jsonStr);
-        product = JSONObject.parseObject(jsonStr, dev.json.fastjson.entity.Product.class);
+        product = JSONObject.parseObject(jsonStr, Product.class);
         System.out.println("json 转为 java object: " + product.toString());
 
         System.out.println("==================== jackson ====================");
@@ -49,7 +50,7 @@ public class ProductTest {
         System.out.println("替换属性: " + jsonStr2);
         try {
             objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-            product = objectMapper.readValue(jsonStr2, dev.json.fastjson.entity.Product.class);
+            product = objectMapper.readValue(jsonStr2, Product.class);
             System.out.println("json转为 java object: " + product.toString());
         } catch (IOException e) {
             logger.severe("resolve json Error : " + e.getMessage());
