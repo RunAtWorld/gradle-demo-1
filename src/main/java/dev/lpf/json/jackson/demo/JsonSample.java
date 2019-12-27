@@ -1,6 +1,5 @@
-package dev.lpf.json.jackson;
+package dev.lpf.json.jackson.demo;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -9,10 +8,10 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
-import dev.lpf.json.jackson.entity.Friend;
-import dev.lpf.json.jackson.entity.FriendDetail;
-import dev.lpf.json.jackson.entity.Person;
-import dev.lpf.json.jackson.entity.Student;
+import dev.lpf.json.jackson.demo.entity.Friend;
+import dev.lpf.json.jackson.demo.entity.FriendDetail;
+import dev.lpf.json.jackson.demo.entity.Person;
+import dev.lpf.json.jackson.demo.entity.Student;
 
 
 import java.io.File;

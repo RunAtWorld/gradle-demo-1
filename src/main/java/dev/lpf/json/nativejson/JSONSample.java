@@ -1,6 +1,6 @@
 package dev.lpf.json.nativejson;
 
-import dev.lpf.json.jackson.entity.FriendDetail;
+import dev.lpf.json.jackson.demo.entity.FriendDetail;
 
 /**
  * @program: gradle-demo-1
